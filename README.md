@@ -1,47 +1,47 @@
 [ININE_Model_README.md](https://github.com/user-attachments/files/31939625/ININE_Model_README.md)
 # I'Nine - Rice Disease Detection Model
 
-## ข้อมูลทั่วไป (Overview)
-แบบจำลองปัญญาประดิษฐ์ (AI Model) สำหรับการตรวจจับและจำแนกโรคข้าวจากภาพถ่ายใบข้าวและส่วนต่างๆ ของต้นข้าว โครงการนี้ใช้สถาปัตยกรรม **YOLOv26L** ซึ่งมีความสามารถในการประมวลผลแบบ Real-time และมีความแม่นยำสูงในการระบุตำแหน่งรอยโรค (Object Detection) พร้อมตีเส้นกรอบรอบวัตถุได้อย่างรวดเร็ว
+## Overview
+This AI model is designed for detecting and classifying rice diseases from photographs of rice leaves and other parts of the rice plant. The project utilizes the **YOLOv26L** architecture, which offers real-time processing capabilities and high accuracy in object detection, quickly drawing boundaries around lesions.
 
-## ชุดข้อมูล (Dataset)
-ชุดข้อมูลที่ใช้ฝึกสอนรวบรวมมาจากกรมการข้าวและแพลตฟอร์ม Kaggle 
-- **จำนวนภาพทั้งหมด:** 2,105 ภาพ
-- **ขนาดภาพนำเข้า (Image Size):** 800 x 800 พิกเซล
-- **การกำกับป้าย (Annotation):** ใช้รูปแบบ **Polygon Labeling** เพื่อลากเส้นขอบแนบชิดรอยโรค ซึ่งช่วยลดสัญญาณรบกวน (Noise) จากพื้นหลังได้ดีกว่ารูปแบบ Bounding Box ทั่วไป
-- **การแบ่งชุดข้อมูล:** 
-  - ชุดฝึกสอน (Training Set): 80%
-  - ชุดตรวจสอบ (Validation Set): 10%
-  - ชุดทดสอบ (Testing Set): 10%
-- **การเสริมข้อมูล (Data Augmentation):** ใช้เทคนิคการหมุนภาพ (Rotation) และการกลับภาพ (Flipping) เพื่อเพิ่มความหลากหลายและลดปัญหา Overfitting
+## Dataset
+The training dataset was collected from the Department of Rice and the Kaggle platform.
+- **Total number of images:** 2,105 images
+- **Image size:** 800 x 800 pixels
+- **Annotation:** Uses **Polygon Labeling** to draw borders closely aligned with lesions. This helps reduce background noise better than typical Bounding Box patterns.
+- **Data Set Division:**
+- Training Set: 80%
+- Validation Set: 10%
+- Testing Set: 10%
+- **Data Augmentation:** Uses image rotation and flipping techniques to increase variety and reduce overfitting.
 
-### คลาสของโรคข้าว (9 Classes)
-1. `Bacterial_Blight` (โรคขอบใบแห้ง)
-2. `Brown_Spot` (โรคใบจุดสีน้ำตาล)
-3. `Rice_Blast` (โรคใบไหม้)
-4. `Narrow_Brown_Spot` (โรคใบขีดสีน้ำตาล)
-5. `False_Smut` (โรคดอกกระถิน)
-6. `Dirty_Seed` (โรคเมล็ดด่าง)
-7. `Sheath_Rot` (โรคกาบใบเน่า)
-8. `Stem_Rot` (โรคลำต้นเน่า)
-9. `Red_Stripe` (โรคแถบแดง)
+### Rice Disease Classes (9 Classes)
+1. `Bacterial_Blight` (Rice Leaf Blight)
+2. `Brown_Spot` (Brown Leaf Spot)
+3. `Rice_Blast` (Rice Blast)
+4. `Narrow_Brown_Spot` (Narrow Brown Leaf Spot)
+5. `False_Smut` (False Smut)
+6. `Dirty_Seed` (Dirty Seed)
+7. `Sheath_Rot` (Sheath Rot) (Sheath Rot)
+8. Stem Rot (Stem Rot)
+9. Red Stripe (Red Stripe Disease)
 
-## สภาพแวดล้อมและการตั้งค่าพารามิเตอร์ (Environment & Hyperparameters)
-- **สถาปัตยกรรม:** YOLOv26L (Pre-trained weights)
-- **ฮาร์ดแวร์ฝึกสอน:** GPU Tesla T4 x 2 (บน Kaggle Notebook)
-- **จำนวนรอบ (Epochs):** 100 รอบ (ตั้งค่า Patience = 20 สำหรับ Early Stopping)
+## Environment and Hyperparameters
+- **Architecture:** YOLOv26L (Pre-trained weights)
+- **Training Hardware:** GPU Tesla T4 x 2 (on Kaggle Notebook)
+- **Number of Epochs:** 100 epochs (Patience set = 20 for Early Stopping)
 - **Batch Size:** 16
-- **Optimizer:** อัตโนมัติ (Auto)
+- **Optimizer:** Auto
 - **Seed:** 0
 
-## ประสิทธิภาพของแบบจำลอง (Model Performance)
-จากการทดสอบพบว่าแบบจำลองที่ใช้การกำกับป้ายแบบ Polygon ให้ประสิทธิภาพสูงที่สุดที่รอบการฝึกสอน **95 Epochs** ก่อนเข้าสู่ภาวะอิ่มตัว (Convergence)
-- **ความแม่นยำ (Precision):** 0.8773
-- **ความครบถ้วน (Recall):** 0.7185
-- **ค่าเฉลี่ยฮาร์มอนิก (F1-Score):** 0.7900
-- **ความแม่นยำเฉลี่ย (mAP50):** 0.8077
-
-## ข้อจำกัดของแบบจำลอง (Limitations)
-- **ปัญหา Class Imbalance:** โรคที่มีภาพฝึกสอนน้อย (เช่น โรคแถบแดง, โรคลำต้นเน่า) จะมีผลการทำนายที่น้อยตามไปด้วย
-- **False Negatives:** โมเดลอาจตรวจไม่พบรอยโรคที่มีขนาดเล็กและกระจายตัวมาก เช่น โรคเมล็ดด่าง และ โรคใบจุดสีน้ำตาล 
-- ความสับสนระหว่างชนิดโรค (False Positive ข้ามคลาส) เกิดขึ้นน้อยมาก โมเดลมีความสามารถในการแยกความแตกต่างของโรคแต่ละชนิดได้เป็นอย่างดี
+## Model Performance
+Testing showed that the model using polygon labeling performed best at **95 Epochs** before reaching saturation. (Convergence)
+- **Precision:** 0.8773
+- **Recall:** 0.7185
+- **Harmonic Mean (F1-Score):** 0.7900
+- **Average Accuracy (mAP50):** 0.8077
+- 
+## Model Limitations
+- **Class Imbalance Problem:** Diseases with limited training images (e.g., red stripe disease, stem rot) will have poor predictive performance.
+- **False Negatives:** The model may miss small and widely distributed lesions, such as seed variegation and brown spot disease.
+- Cross-class false positives are rare; the model has a very good ability to differentiate between disease types.
